@@ -1,0 +1,65 @@
+---
+title: "SQL or NoSQL?"
+publishedAt: "2024-12-31"
+summary:
+  "How I chose the right database for my next side quest"
+---
+
+I spent a lot of time wondering which database to use for the project. I looked
+into various database options, hosting providers, and ORMs such as Prisma,
+Drizzle, and Mongoose. Each had its strengths and weaknesses, with many offering
+first-class support for Next.js, but I eventually decided to settle for a NoSQL
+MongoDB database. The choice of database depends primarily on the use case;
+almost everything is secondary. Popular ORMs have very similar APIs as well, so
+whether the app uses a SQL or a NoSQL database behind the scenes makes
+relatively little difference to the application logic, beyond the initial setup.
+
+In this case, I needed the database to perform quick reads across multiple
+collections/tables; for example, every time a post is fetched, I'd have to fetch
+likes and comments as well. This is where MongoDB shines, as MongoDB's schema
+design aligns closely with this app's data access patterns: I can store arrays
+of references to the five most recent likes and comments directly in a post
+document, so that when the feed is loaded, MongoDB can quickly fetch the small
+set of likes and comments using the `_id`, which is automatically indexed. Since
+relational databases favor normalization, this design choice would not be
+encouraged, but in MongoDB databses, this is a common practice. Furthermore,
+MongoDB offers advanced indexing capabilities. In the notification collection, I
+create a composite index on `(recipient, created_at)`, so that I can quickly
+query a user's notifications in sorted order.
+
+PostgreSQL would have been great for ensuring data consistency. With a
+normalized relational design, I would've kept foreign keys to the posts table in
+the likes and comments tables. When a post is deleted, `ON DELETE CASCADE` would
+have automatically deleted that post's likes and comments from their respective
+tables. This eliminates the need for manual cleanup, as PostgreSQL automatically
+handles it in a single transaction. While MongoDB does not offer built-in
+referential integrity, it now supports multi-document transactions. This would
+allow me to delete a post along with its associated likes and comments in one
+atomic operation, achieving a similar level of consistency. Although this
+introduces additional overhead, it does not warrant the use of a SQL database
+here, since such high consistency is not a priority for this project.
+
+Perhaps the most important benefit of using a NoSQL database here is its
+schemaless design, which makes it far more fleixble than any SQL database. As an
+indie developer, I'm iterating over the app very quickly, and I want to be able
+to make changes fast. With PostgreSQL, there's the additional overhead of
+maintaining referential integrity across normalized tables, so I would have to
+perform database migrations every time I wanted to make a change to how or what
+data is stored. MongoDB eliminates this by representing data as standalone items
+in collections, eliminating rigid schemas. Additionally, Mongoose offers type
+safety, which helps ensure the consistency and integrity of the data while still
+facilitating rapid iteration.
+
+Lastly, database hosting options were also an important consideration. Since the
+project is going to be hosted on Vercel, the obvious choice was using Vercel
+Postgres. This option offered some advantages, such as low latency Postgres
+queries from Edge functions. However, I would have to write raw SQL queries
+using Vercel's Postgres SDK and not an ORM, which would have introduced high
+development overhead. Additionally, database options are quite limited on
+Vercel's hobby plan, and with Vercel Pro, costs can accrue really fast. Other
+managed PostgreSQL options include services from popular cloud providers such as
+AWS, MongoDB offers relatively cheaper shared clusters, which, by design, can be
+sharded quite easily without additional effort. In the future, if I want to
+migrate to a different NoSQL database, such as Amazon's DynamoDB, I expect to be
+able to do it relatively easily for this simple database design using Amazon's
+Database Migration Service.
