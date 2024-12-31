@@ -1,17 +1,16 @@
 ---
-title: "SQL or NoSQL?"
+title: "Which Way Western Man: SQL or NoSQL?"
 publishedAt: "2024-12-31"
-summary:
-  "How I chose the right database for my next side quest"
+summary: "How I chose the right database for my next side quest"
 ---
 
-I spent a lot of time wondering which database to use for the project. I looked
-into various database options, hosting providers, and ORMs such as Prisma,
-Drizzle, and Mongoose. Each had its strengths and weaknesses, with many offering
-first-class support for Next.js, but I eventually decided to settle for a NoSQL
-MongoDB database. The choice of database depends primarily on the use case;
-almost everything is secondary. Popular ORMs have very similar APIs as well, so
-whether the app uses a SQL or a NoSQL database behind the scenes makes
+I spent a lot of time wondering which database to use for my new project. I
+looked into various database options, hosting providers, and ORMs such as
+Prisma, Drizzle, and Mongoose. Each had its strengths and weaknesses, with many
+offering first-class support for Next.js, but I eventually settled for a NoSQL
+MongoDB database. The choice of database almost always depends primarily on the
+use case; almost everything is secondary. Popular ORMs have very similar APIs as
+well, so whether the app uses a SQL or a NoSQL database behind the scenes makes
 relatively little difference to the application logic, beyond the initial setup.
 
 In this case, I needed the database to perform quick reads across multiple
