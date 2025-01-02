@@ -11,15 +11,15 @@ import { baseUrl } from './sitemap'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'blog',
+    default: 'atib jawad zion',
     template: '%s | atib jawad zion',
   },
-  description: 'atib jawad zion',
+  description: 'documenting my side quests as a software engineer',
   openGraph: {
-    title: 'blog',
-    description: 'atib jawad zion',
+    title: 'atib jawad zion',
+    description: 'documenting my side quests as a software engineer',
     url: baseUrl,
-    siteName: 'blog',
+    siteName: 'atib jawad zion',
     locale: 'en_US',
     type: 'website',
   },
